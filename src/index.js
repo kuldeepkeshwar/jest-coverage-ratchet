@@ -1,10 +1,9 @@
 const { argv } = require('yargs')
 const { resolve } = require('path')
-const { logError, logSuccess } = require('./utils')
 const program = require('./program')
 
 const defaultCoveragePath = 'coverage/coverage-summary.json'
-const defaultConfigPath = 'package.json'
+const defaultConfigPath = 'jest-config.json'
 const currentWorkingDir = process.cwd()
 
 const coveragePath = resolve(
@@ -17,4 +16,4 @@ const configPath = resolve(
   argv.configPath || defaultConfigPath
 )
 
-program([coveragePath, configPath]).fork(logError, logSuccess)
+program(coveragePath, configPath)

@@ -47,7 +47,7 @@ const takeMaxValues = R.reduce(
 const configPath = ['coverageThreshold', 'global']
 
 //    thresholdLens :: Lens
-const thresholdLens = R.lensPath(['jest', ...configPath])
+const thresholdLens = R.lensPath(configPath)
 
 //    ratchetThresholds :: (Object, Object) -> Object
 const ratchetThresholds = R.compose(takeMaxValues, R.unnest, R.map(R.toPairs))
@@ -62,12 +62,12 @@ const getCurrentThresholdsFromConfig = R.ifElse(
   R.path(configPath)
 )
 
-//    getPackageJsonPath :: () -> Future String Error
-const getPackageJsonPath = () =>
-  F.of(process.cwd()).map(rootDir => resolve(rootDir, 'package.json'))
+//    getJestConfigJsonPath :: () -> Future String Error
+const getJestConfigJsonPath = p =>
+  F.of(process.cwd()).map(rootDir => resolve(rootDir, p))
 
-//    getPackageJson :: () -> Future Object Error
-const getPackageJson = () => getPackageJsonPath().chain(requireF)
+//    getJestConfigJson :: () -> Future Object Error
+const getJestConfigJson = p => getJestConfigJsonPath(p).chain(requireF)
 
 //    writePackage :: String -> Object -> Future Object Error
 const writeFileF = R.curry((path, x) =>
@@ -79,8 +79,8 @@ module.exports = {
   formatJson,
   getCurrentThresholdsFromConfig,
   getNewThresholdsFromSummary,
-  getPackageJson,
-  getPackageJsonPath,
+  getJestConfigJson,
+  getJestConfigJsonPath,
   log,
   logError,
   logResult,
